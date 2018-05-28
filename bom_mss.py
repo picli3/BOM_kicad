@@ -76,7 +76,7 @@ columnset = compfields | partfields     # union
 
 
 # prepend an initial 'hard coded' list and put the enchillada into list 'columns'
-columns = ['Item', 'Reference(s)','Description' ,'Qty','Manufacturer','Mfg Part #','Package','Type','Value']+ sorted(list(columnset))
+columns = ['Item', 'Reference(s)','Description' ,'Qty','Manufacturer','Mfg Part #','Package','Type','Value']+ sorted(list(compfields))
 
 # Create a new csv writer object to use as the output formatter
 out = csv.writer( f, lineterminator='\n', delimiter=',', quotechar='\"', quoting=csv.QUOTE_ALL )
@@ -84,7 +84,11 @@ out = csv.writer( f, lineterminator='\n', delimiter=',', quotechar='\"', quoting
 # override csv.writer's writerow() to support encoding conversion (initial encoding is utf8):
 def writerow( acsvwriter, columns ):
     utf8row = []
+    conta=0
     for col in columns:
+        conta+=1
+        if conta==10:
+            break
         utf8row.append( str(col) )  # currently, no change
     acsvwriter.writerow( utf8row )
 
@@ -117,19 +121,20 @@ for group in grouped:
     row.append( refs );
     row.append('') 
     row.append( len(group) )
-    row.append('') 
-    row.append('') 
+    row.append('')
+    #row.append('')
+    for field in columns[9:10]:
+        row.append( net.getGroupField(group, field) );
     #row.append(c.getPartName())
     cadena=net.getGroupFootprint(group)
-    gato=cadena.lstrip("a.")
-    row.append(gato)
+    cont=0
+    for x in xrange(0,len(cadena)):
+        cont+=1
+        if cadena[x]==':':
+            row.append(cadena[cont:])
     row.append('')
     #row.append( net.getGroupDatasheet(group) )
     row.append(c.getValue())
-    # from column 7 upwards, use the fieldnames to grab the data
-    for field in columns[7:]:
-        row.append( net.getGroupField(group, field) );
-
     writerow( out, row  )
 
 f.close()
