@@ -10,6 +10,7 @@ para esto en las __propiedades del simbolo__ se debe agregar un campo que por de
 
 Una vez se hallan colocado el numero de parte de todos los componentes se procede a generar el BOM.
 
+![Con titulo](img/bonkicad.png "titulo")
 ## USO
 Command line:
     
